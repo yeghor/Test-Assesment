@@ -7,6 +7,7 @@ from datetime import datetime
 
 
 class ShortTravelProjects(BaseModel):
+    project_id: str
     name: str
     description: str | None
 
@@ -14,6 +15,7 @@ class TravelProject(ShortTravelProjects):
     note: str
 
 class TravelPlaceShort(BaseModel):
+    place_id: str
     name: str
     visited: bool
 
