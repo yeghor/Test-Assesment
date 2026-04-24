@@ -1,10 +1,23 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import List
+
+from datetime import datetime
+
+# HTTP Bodies
 
 class TravelProject(BaseModel):
-    pass
+    name: str
+    description: str | None
 
-class ProjectNotes(BaseModel):
-    pass
+    start_date: datetime | None
+    
+    note: str = Field(default="")
+    places: List[str]
 
-class User(BaseModel):
-    pass
+class PlaceNote(BaseModel):
+    place_id: str
+    note: str
+
+class Auth(BaseModel):
+    username: str
+    password: str
