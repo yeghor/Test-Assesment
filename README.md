@@ -24,6 +24,7 @@ To start the project using Docker:
 
 1. Build the Docker image:
    ```bash
+   cd backend
    docker build -t traveling_backend .
    ```
 
