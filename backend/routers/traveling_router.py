@@ -4,7 +4,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from DTO import *
+from publicDTO import *
 
 traveling = APIRouter()
 
@@ -12,7 +12,7 @@ traveling = APIRouter()
 @traveling.post("/", summary="Create a travel project")
 async def create_travel_project(travel_object: TravelProjectCreate) -> None:
     """Create a travel project with optional imported places."""
-
+    
 
 @traveling.get("/", summary="List travel projects")
 async def list_travel_projects() -> List[ShortTravelProjects]:
