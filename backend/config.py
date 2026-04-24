@@ -12,7 +12,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-import aiosqlite
-
-print(aiosqlite.__version__)
