@@ -21,7 +21,9 @@ class TravelProject(Base):
         DateTime(timezone=True), nullable=True
     )
 
-    places: Mapped[list[TravelPlace]] = relationship(back_populates="project", lazy="selectin")
+    places: Mapped[list[TravelPlace]] = relationship(
+        back_populates="project", lazy="selectin"
+    )
 
 
 class TravelPlace(Base):

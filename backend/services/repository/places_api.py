@@ -33,7 +33,7 @@ class PlacesAPI:
             async with session.get(f"{self._base_url}/{place_id}") as response:
                 if response.status == 404 or response.status == 400:
                     return None
-                
+
                 self._validate_failed_request(response.status, skip_404=True)
 
                 data = await response.json()

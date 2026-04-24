@@ -36,9 +36,7 @@ class PostgresService:
         )
         return result.scalar_one_or_none()
 
-    async def get_project_places(
-        self, project_id: str
-    ) -> List[TravelPlace]:
+    async def get_project_places(self, project_id: str) -> List[TravelPlace]:
         result = await self._session.execute(
             select(TravelPlace).where(TravelPlace.project_id == project_id)
         )

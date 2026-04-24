@@ -3,7 +3,7 @@ from .database import get_engine, get_sessionlocal
 
 async def get_session_depends():
     """
-    Automatically closes session.\n\n 
+    Automatically closes session.\n\n
     Does not commit transaction on close
     Use with fastAPI Depends()!
     """

@@ -8,6 +8,7 @@ from database import initialize_models, get_engine, Base
 
 from contextlib import asynccontextmanager
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global engine
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
     print("Initializing models")
     await initialize_models(engine=engine, Base=Base)
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 
