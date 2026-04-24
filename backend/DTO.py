@@ -1,22 +1,46 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 from typing import List
 
 from datetime import datetime
 
-# HTTP Bodies
 
-class TravelProject(BaseModel):
+class ShortTravelProjects(BaseModel):
     name: str
     description: str | None
 
+class TravelProject(ShortTravelProjects):
+    note: str
+
+class TravelPlaceShort(BaseModel):
+    name: str
+    visited: bool
+
+class TravelPlace(TravelPlaceShort):
+    note: str
+
+
+# HTTP Bodies
+
+class TravelProjectUpdate(BaseModel):
+    name: str | None
+    description: str | None
+
     start_date: datetime | None
-    
+
+
+class TravelProjectCreate(TravelProjectUpdate):
+    name: str
+
     note: str = Field(default="")
     places: List[str]
+
 
 class PlaceNote(BaseModel):
     place_id: str
     note: str
+
 
 class Auth(BaseModel):
     username: str
