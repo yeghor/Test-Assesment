@@ -1,6 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.repository import PostgresService, PlacesAPI
 
+from publicDTO import *
+
+
 class TravelingService:
     def __init__(self, session: AsyncSession):
         self.postgres_service = PostgresService(session)
@@ -27,11 +30,17 @@ class TravelingService:
     def search_places(self):
         pass
 
-    def get_places(self, page: int):
+    def list_project_places(self, page: int):
+        pass
+
+    def update_project_place(self):
         pass
     
     def list_projects(self):
         pass
 
     def get_project(self):
+        pass
+
+    def get_project_place(self):
         pass

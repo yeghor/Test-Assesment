@@ -10,16 +10,6 @@ class Base(DeclarativeBase):
     pass
 
 
-class Users(Base):
-    __tablename__ = "user"
-
-    user_id: Mapped[str] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column()
-    password_hash: Mapped[str] = mapped_column()
-
-    projects: Mapped[list[TravelProject]] = relationship(back_populates="user", lazy="selectin")
-
-
 class TravelProject(Base):
     __tablename__ = "travel_project"
 
@@ -34,7 +24,6 @@ class TravelProject(Base):
 
     note: Mapped[str] = mapped_column(default="")
 
-    user: Mapped[Users] = relationship(back_populates="projects")
     places: Mapped[list[TravelPlace]] = relationship(back_populates="project", lazy="selectin")
 
 
