@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from services.repository import PostgresService, PlacesAPI
 
 from publicDTO import *
-
+from database import TravelProject, TravelPlace
 
 class TravelingService:
     def __init__(self, session: AsyncSession):
@@ -13,7 +13,7 @@ class TravelingService:
         """Must be always called to keep all changes"""
 
     def create_project():
-        pass
+        
 
     def update_project():
         pass
