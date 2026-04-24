@@ -23,11 +23,11 @@ async def create_travel_project(
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.create_project()
+        await traveling_service.create_project(travel_object)
         await traveling_service.commit_changes()
-    except HTTPException:
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -38,11 +38,10 @@ async def list_travel_projects(session: AsyncSession) -> List[ShortTravelProject
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.list_projects()
-        await traveling_service.commit_changes()
-    except HTTPException:
+        return await traveling_service.list_projects()
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -54,6 +53,13 @@ async def get_travel_project(
 
     traveling_service = TravelingService(session=session)
 
+    try:
+        return await traveling_service.get_project(project_id)
+    except HTTPException as e:
+        raise e from e
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal server error")
+
 
 @traveling.put("/{project_id}", summary="Update a travel project")
 async def update_travel_project(
@@ -64,11 +70,11 @@ async def update_travel_project(
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.update_project()
+        await traveling_service.update_project(project_id, travel_project)
         await traveling_service.commit_changes()
-    except HTTPException:
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -79,28 +85,28 @@ async def delete_travel_project(project_id: str, session: AsyncSession) -> None:
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.delete_travel_project()
+        await traveling_service.delete_project(project_id)
         await traveling_service.commit_changes()
-    except HTTPException:
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
 @traveling.post("/{project_id}/places", summary="Add a place to a travel project")
 async def add_place_to_project(
-    project_id: str, place_name: str, session: AsyncSession
+    project_id: str, place_id: str, session: AsyncSession
 ) -> None:
     """Add a place to an existing project after validating the external place ID."""
 
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.add_project_place()
+        await traveling_service.add_project_place(place_id, project_id)
         await traveling_service.commit_changes()
-    except HTTPException:
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -113,11 +119,11 @@ async def update_place_in_project(
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.update_project_place()
+        await traveling_service.update_project_place(project_id, place_id, visited)
         await traveling_service.commit_changes()
-    except HTTPException:
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -130,11 +136,10 @@ async def list_project_places(
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.list_project_places()
-        await traveling_service.commit_changes()
-    except HTTPException:
+        return await traveling_service.get_project_places(project_id)
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
@@ -150,9 +155,8 @@ async def get_project_place(
     traveling_service = TravelingService(session=session)
 
     try:
-        await traveling_service.get_project_place()
-        await traveling_service.commit_changes()
-    except HTTPException:
+        return await traveling_service.get_project_place(project_id, place_id)
+    except HTTPException as e:
         raise e from e
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")

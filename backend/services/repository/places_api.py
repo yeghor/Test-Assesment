@@ -8,6 +8,7 @@ class PlaceDict(TypedDict):
     name: str
     place_id: str
 
+
 class PlacesAPI:
     def __init__(self):
         self._base_url = "https://api.artic.edu/api/v1/places"
@@ -23,36 +24,33 @@ class PlacesAPI:
     def _map_places(raw_api_data: any) -> List[PlaceDict]:
         out = []
         for data in raw_api_data["data"]:
-            out.append(
-                {
-                    "name": data["title"],
-                    "place_id": str(data["id"])
-                }
-            )
+            out.append({"name": data["title"], "place_id": str(data["id"])})
         return out
 
     async def check_place(self, place_id: str) -> str:
-        """Returns names of the places, if name None, this place does not exist"""
+        """Returns the place title if the place exists, otherwise None."""
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{self._base_url}/{place_id}") as response:
-                self._validate_failed_request(response.status, skip_404=True)                
-                
+                self._validate_failed_request(response.status, skip_404=True)
+
                 if response.status == 404:
                     return None
-                
+
                 data = await response.json()
-                return data["data"]["id"]
+                return data["data"]["title"]
 
     async def get_places(self, page: int) -> List[PlaceDict]:
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{self._base_url}?page={page}&limit={50}") as response:
-                self._validate_failed_request(response.status)                
+            async with session.get(
+                f"{self._base_url}?page={page}&limit={50}"
+            ) as response:
+                self._validate_failed_request(response.status)
                 data = await response.json()
                 return self._map_places(data)
 
     async def search_places(self, query: str) -> List[PlaceDict]:
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{self._base_url}/search?q={query}") as response:
-                self._validate_failed_request(response.status)                
+                self._validate_failed_request(response.status)
                 data = await response.json()
                 return self._map_places(data)
