@@ -10,11 +10,11 @@ This is a test assessment project, implementing a traveling backend service usin
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone 
-   cd Test-Assesment
-   ```
+Clone the repository:
+```bash
+git clone 
+cd Test-Assesment
+```
 
 ## Running the Project
 
@@ -30,22 +30,20 @@ To start the project using Docker:
    docker run --name traveling_backend_container -p 8000:8000 -d traveling_backend
    ```
 
-The application will be available at `http://localhost:8000`.
+The application will be available at `http://localhost:8000`
 
 ## Development
 
 For local development:
 
-1. Ensure Python 3.11+ is installed
-2. Install dependencies:
+1. Install dependencies:
    ```bash
    cd backend
    pip install -e .
    ```
-3. Set up the database (PostgreSQL and Redis)
-4. Run the application:
+2. Run the application:
    ```bash
    uvicorn main:app --reload
    ```
 
-The application will be available at `http://localhost:8000`.
+The application will be available at `http://localhost:8000`
