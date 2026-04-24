@@ -11,22 +11,28 @@ class ShortTravelProjects(BaseModel):
     name: str
     description: str | None
 
+
 class TravelProjectSchema(ShortTravelProjects):
     note: str
+
 
 class TravelPlaceShort(BaseModel):
     place_id: str
     name: str
     visited: bool
 
-class TravelPlace(TravelPlaceShort):
+
+class TravelPlaceSchema(TravelPlaceShort):
     note: str
+
 
 class AccessibleProjectPlace(BaseModel):
     place_id: str
     place_name: str
 
+
 # HTTP Bodies
+
 
 class TravelProjectUpdate(BaseModel):
     name: str | None

@@ -112,7 +112,7 @@ class TravelingService:
             raise HTTPException(status_code=404, detail="Place does not exist")
 
         await self._postgres_service.add(
-            TravelPlace(
+            TravelPlaceSchema(
                 place_id=place_id,
                 project_id=project_id,
                 place_name=place_name,
@@ -126,8 +126,8 @@ class TravelingService:
 
         await self._postgres_service.delete(db_place)
 
-    async def list_projects(self) -> List[ShortTravelProjects]:
-        projects = await self._postgres_service.get_projects("")
+    async def get_projects(self) -> List[ShortTravelProjects]:
+        projects = await self._postgres_service.get_projects()
         return [
             ShortTravelProjects(
                 project_id=project.project_id,
@@ -149,17 +149,6 @@ class TravelingService:
             note=db_project.note,
         )
 
-    async def get_project_places(self, project_id: str) -> List[TravelPlaceShort]:
-        project_places = await self._postgres_service.get_project_places("", project_id)
-        return [
-            TravelPlaceShort(
-                place_id=place.place_id,
-                name=place.place_name,
-                visited=place.visited,
-            )
-            for place in project_places
-        ]
-
     async def search_places(self, query: str) -> List[AccessibleProjectPlace]:
         remote_places = await self._places_api.search_places(query)
         return [
@@ -170,24 +159,14 @@ class TravelingService:
             for place in remote_places
         ]
 
-    async def list_project_places(self, project_id: str) -> List[TravelPlace]:
-        project_places = await self._postgres_service.get_project_places("", project_id)
-        return [
-            TravelPlace(
-                place_id=place.place_id,
-                name=place.place_name,
-                visited=place.visited,
-                note="",
-            )
-            for place in project_places
-        ]
-
-    async def get_project_place(self, project_id: str, place_id: str) -> TravelPlace:
+    async def get_project_place(
+        self, project_id: str, place_id: str
+    ) -> TravelPlaceSchema:
         db_place = await self._postgres_service.get_project_place(project_id, place_id)
         if db_place is None:
             raise HTTPException(status_code=404, detail="Place not found")
 
-        return TravelPlace(
+        return TravelPlaceSchema(
             place_id=db_place.place_id,
             name=db_place.place_name,
             visited=db_place.visited,
@@ -202,3 +181,23 @@ class TravelingService:
             raise HTTPException(status_code=404, detail="Place not found")
 
         db_place.visited = visited
+
+    async def get_project_places(self, project_id: str) -> List[TravelPlaceShort]:
+        project_places = await self._postgres_service.get_project_places(project_id)
+        return [
+            TravelPlaceShort(
+                place_id=place.place_id,
+                name=place.place_name,
+                visited=place.visited,
+            )
+            for place in project_places
+        ]
+
+    async def get_possible_project_places(
+        self, page: int
+    ) -> List[AccessibleProjectPlace]:
+        project_places = await self._places_api.get_places(page=page)
+        return [
+            AccessibleProjectPlace(place_id=place["place_id"], place_name=place["name"])
+            for place in project_places
+        ]
