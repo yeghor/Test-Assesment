@@ -1,2 +1,2 @@
-from .places_api import PlacesAPI
+from .places_api_service import PlacesAPI
 from .postgres_service import PostgresService

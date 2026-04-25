@@ -10,5 +10,7 @@ class Settings(BaseSettings):
 
     datetime_format: str = "%Y-%m-%dT%H:%M:%S.%f%z"
 
+    third_party_api_lru_cache_size = 32
+
 
 settings = Settings()

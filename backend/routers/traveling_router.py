@@ -183,6 +183,9 @@ async def get_allowed_project_places(
 ) -> List[AccessibleProjectPlace]:
     """Get details for a single place within a project"""
 
+    if page <= 0:
+        raise HTTPException(status_code=400, detail="Page must be positive & non-zero number")
+
     traveling_service = TravelingService(session=session)
 
     try:

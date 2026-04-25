@@ -95,7 +95,7 @@ class TravelingService:
                 detail="Cannot delete a project with visited places",
             )
 
-        project_places = await self._postgres_service.get_project_places("", project_id)
+        project_places = await self._postgres_service.get_project_places(project_id)
         for place in project_places:
             await self._postgres_service.delete(place)
 
@@ -120,7 +120,7 @@ class TravelingService:
             raise HTTPException(status_code=404, detail="Place does not exist")
 
         await self._postgres_service.add(
-            TravelPlaceSchema(
+            TravelPlace(
                 place_id=place_id,
                 project_id=project_id,
                 place_name=place_name,
@@ -141,7 +141,7 @@ class TravelingService:
                 project_id=project.project_id,
                 name=project.name,
                 description=project.description,
-                start_date=project.start_date.strftime(format=settings.datetime_format),
+                start_date=project.start_date.strftime(format=settings.datetime_format) if project.start_date else None,
             )
             for project in projects
         ]
@@ -155,7 +155,7 @@ class TravelingService:
             project_id=db_project.project_id,
             name=db_project.name,
             description=db_project.description,
-            start_date=db_project.start_date.strftime(settings.datetime_format),
+            start_date=db_project.start_date.strftime(settings.datetime_format) if db_project.start_date else None,
         )
 
     async def search_places(self, query: str) -> List[AccessibleProjectPlace]:

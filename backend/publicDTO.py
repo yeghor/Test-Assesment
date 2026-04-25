@@ -10,7 +10,7 @@ class TravelProjectSchema(BaseModel):
     project_id: str
     name: str
     description: str | None
-    start_date: str  # Datetime compatible string
+    start_date: str | None  # Datetime compatible string
 
 
 class TravelPlaceShort(BaseModel):

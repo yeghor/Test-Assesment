@@ -2,7 +2,10 @@ from fastapi import HTTPException
 
 from typing import List, Any, TypedDict
 import aiohttp
-from functools import lru_cache
+from cache import AsyncLRU
+
+from config import settings
+
 
 class PlaceDict(TypedDict):
     name: str
@@ -17,7 +20,7 @@ class PlacesAPI:
     def _validate_failed_request(status_code: int, skip_404: bool = False) -> None:
         """Raises a HTTPException on failed request"""
 
-        if status_code != 200 or (status_code == 404 and not skip_404):
+        if status_code != 200 and not (status_code == 404 and not skip_404):
             raise HTTPException(status_code=500, detail="Internal server error")
 
     @staticmethod
@@ -27,14 +30,13 @@ class PlacesAPI:
             out.append({"name": data["title"], "place_id": str(data["id"])})
         return out
 
-    @lru_cache
+    @AsyncLRU(maxsize=settings.third_party_api_lru_cache_size)
     async def check_place(self, place_id: str) -> str:
         """Returns the place title if the place exists, otherwise None."""
 
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{self._base_url}/{place_id}") as response:
                 if response.status == 404 or response.status == 400:
-                    self._cache["check"][place_id] = None
                     return None
 
                 self._validate_failed_request(response.status, skip_404=True)
@@ -42,7 +44,7 @@ class PlacesAPI:
                 data = await response.json()
                 return data["data"]["title"]
 
-    @lru_cache
+    @AsyncLRU(maxsize=settings.third_party_api_lru_cache_size)
     async def get_places(self, page: int) -> List[PlaceDict]:
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -52,7 +54,7 @@ class PlacesAPI:
                 data = await response.json()
                 return self._map_places(data)
 
-    @lru_cache
+    @AsyncLRU(maxsize=settings.third_party_api_lru_cache_size)
     async def search_places(self, query: str) -> List[PlaceDict]:
         query = query.strip()
 
@@ -61,4 +63,3 @@ class PlacesAPI:
                 self._validate_failed_request(response.status)
                 data = await response.json()
                 return self._map_places(data)
-
